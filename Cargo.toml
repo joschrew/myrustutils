@@ -10,3 +10,5 @@ anyhow = "1.*"
 reqwest = { version = "0.*", features = ["blocking", "multipart"] }
 regex = "1.*"
 base64 = "0.*"
+markdown = "1.0.0-alpha.12"
+colored = "2.*"
