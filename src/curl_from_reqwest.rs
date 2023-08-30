@@ -96,6 +96,13 @@ pub fn print_curl(request: &RequestBuilder) -> Result<()> {
             res.push(format!("\"{}: {}\"", key, value.to_str()?));
         }
     }
+
+    if let Some(body) = request.body() {
+        if let Some(bytes) = body.as_bytes() {
+            res.push("-d".to_owned());
+            res.push(format!("'{}'", std::str::from_utf8(bytes).unwrap()));
+        }
+    }
     println!("{}", res.join(" "));
     Ok(())
 }

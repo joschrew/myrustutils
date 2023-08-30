@@ -5,9 +5,9 @@ use reqwest::header::ACCEPT;
 use reqwest::Url;
 
 fn main() {
+    // GET command with authentication
     let password = "not-the-real-password";
     let client = Client::new();
-    //let url = Url::parse("http://141.5.99.53/api/")
     let url = Url::parse("http://example.com/api/")
         .unwrap()
         .join("admin/import-status")
@@ -19,6 +19,7 @@ fn main() {
         .basic_auth("admin", Some(password));
     print_curl(&request).unwrap();
 
+    // POST multipart
     let workspace_path = "foo.zip";
     let url = Url::parse("http://example.com/")
         .unwrap()
@@ -26,7 +27,7 @@ fn main() {
         .unwrap();
     assert!(
         std::path::Path::new("foo.zip").exists(),
-        "File '{}' needed to run the example",
+        "File '{}' needed to run the example. Create it with `touch foo.zip`",
         workspace_path
     );
     let form = multipart::Form::new()
@@ -36,6 +37,18 @@ fn main() {
         .post(url)
         .multipart(form)
         .basic_auth("ocrd", Some(password));
-
     print_curl_multipart(&request, &[("workspace", "@foo.zip")], Some(password));
+
+    // POST json body
+    let url = Url::parse("http://example.com/")
+        .unwrap()
+        .join("workflow")
+        .unwrap();
+    let body = "{\"workspace-id\": \"test1\", \"input-file-grp\": \"OCR-D-IMG\"}";
+
+    let request = client
+        .post(url)
+        .body(body)
+        .basic_auth("ocrd", Some(password));
+    print_curl(&request).unwrap();
 }
