@@ -30,9 +30,7 @@ fn get_with_download(client: &Client) {
         .unwrap()
         .join("workspace/test1")
         .unwrap();
-    let request = client
-        .get(url)
-        .header(ACCEPT, "application/vnd.ocrd+zip");
+    let request = client.get(url).header(ACCEPT, "application/vnd.ocrd+zip");
     // TODO: the output flag ("--output foo.zip") is not part of the request. Enable a user to
     // optionally add to the generated curl-command. Create a new function print_curl3 or
     // print_curl_custom which takes a string which is automatically appended to the command

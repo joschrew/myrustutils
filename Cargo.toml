@@ -1,14 +1,17 @@
 [package]
 name = "myrustutils"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.*"
-reqwest = { version = "0.*", default-features = false, features = ["blocking", "multipart"] }
-regex = "1.*"
-base64 = "0.*"
+reqwest = { version = "0.11.22", default-features = false, features = ["blocking", "multipart"] }
 markdown = "1.0.0-alpha.12"
-colored = "2.*"
+anyhow = "1.0.75"
+regex = "1.10.2"
+base64 = "0.21.5"
+colored = "2.0.4"
+
+[dev-dependencies]
+tempfile = "3.8.1"
