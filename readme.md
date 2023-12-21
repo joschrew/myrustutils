@@ -3,4 +3,5 @@ access.
 
 Run the examples:
 -----------------
-`cargo run --example curl_from_reqwest`
+`cargo run --example markdown_headers`
+`cargo run --example curl_from_reqwest --features curl-from-reqwest`
