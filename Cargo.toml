@@ -4,7 +4,7 @@ version = "0.2.0"
 edition = "2021"
 
 [[example]]
-name = "curl_from_reqwest"
+name = "curl-from-reqwest"
 required-features = ["curl-from-reqwest"]
 
 [features]
