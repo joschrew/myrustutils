@@ -13,6 +13,14 @@ pub fn print_curl_multipart(
     parts: &[(&str, &str)],
     credentials: Option<&str>,
 ) {
+    println!("{}", to_curl_multipart(request, parts, credentials));
+}
+
+pub fn to_curl_multipart(
+    request: &RequestBuilder,
+    parts: &[(&str, &str)],
+    credentials: Option<&str>,
+) -> String {
     let mut res: Vec<String> = Vec::new();
     res.push("curl".to_owned());
     let str_debug = format!("{:?}", request);
@@ -60,7 +68,7 @@ pub fn print_curl_multipart(
         res.push("-F".to_owned());
         res.push(format!("\"{key}={value}\""));
     }
-    println!("{}", res.join(" "));
+    res.join(" ")
 }
 
 /// Tries to print a curl command according to RequestBuilder`
@@ -68,6 +76,11 @@ pub fn print_curl_multipart(
 /// This only works if the request can be cloned, which for example does not work with multipart
 /// requests.
 pub fn print_curl(request: &RequestBuilder) -> Result<()> {
+    println!("{}", to_curl(request)?);
+    Ok(())
+}
+
+pub fn to_curl(request: &RequestBuilder) -> Result<String> {
     let clone = match request.try_clone() {
         Some(val) => val,
         None => {
@@ -103,6 +116,5 @@ pub fn print_curl(request: &RequestBuilder) -> Result<()> {
             res.push(format!("'{}'", std::str::from_utf8(bytes).unwrap()));
         }
     }
-    println!("{}", res.join(" "));
-    Ok(())
+    Ok(res.join(" "))
 }
