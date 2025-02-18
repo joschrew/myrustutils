@@ -1,6 +1,6 @@
 [package]
 name = "myrustutils"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 
 [[example]]
@@ -11,12 +11,12 @@ required-features = ["curl-from-reqwest"]
 curl-from-reqwest = ["dep:reqwest"]
 
 [dependencies]
-reqwest = { version = "0.11.22", default-features = false, features = ["blocking", "multipart"], optional = true}
-markdown = "1.0.0-alpha.12"
-anyhow = "1.0.75"
-regex = "1.10.2"
-base64 = "0.21.5"
-colored = "2.0.4"
+reqwest = { version = "0.12.12", default-features = false, features = ["blocking", "multipart"], optional = true}
+markdown = "1.0.0-alpha.22"
+anyhow = "1.0.95"
+regex = "1.11.1"
+base64 = "0.22.1"
+colored = "3.0.0"
 
 [dev-dependencies]
-tempfile = "3.8.1"
+tempfile = "3.17.1"
