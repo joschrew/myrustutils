@@ -71,3 +71,16 @@ fn print_headers(headers: &[Header]) {
         println!("{:space$}{}", "", x.text.color(level_to_color(x.level)),);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::path::PathBuf;
+
+    #[test]
+    fn read_headers() {
+        let base = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let headers =
+            super::read_headers(&base.join("examples/example.md")).expect("error reading headers");
+        assert!(headers.len() > 0, "no headers created");
+    }
+}
