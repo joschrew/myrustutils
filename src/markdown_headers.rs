@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use colored::*;
 use regex::Regex;
 use std::fs::read_to_string;

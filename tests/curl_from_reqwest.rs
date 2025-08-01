@@ -2,8 +2,8 @@
 #[test]
 fn simple_get_to_curl() {
     use myrustutils::to_curl;
-    use reqwest::blocking::Client;
     use reqwest::Url;
+    use reqwest::blocking::Client;
 
     let client = Client::new();
 

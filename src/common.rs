@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 
 /// Read files or directories of a directory. Not recursively
@@ -8,7 +8,7 @@ use std::path::Path;
 /// * `dir` - folder to read
 /// * `text` - text a file/dir must contain to be returned
 /// * `dir_filter` - Some(true): return found directories only, Some(false) return found files
-///                  only, None: no filtering
+///   only, None: no filtering
 ///
 pub fn read_dir(dir: &Path, text: Option<&str>, dir_filter: Option<bool>) -> Result<Vec<String>> {
     let readdir = std::fs::read_dir(dir);
@@ -43,7 +43,7 @@ pub fn read_dir(dir: &Path, text: Option<&str>, dir_filter: Option<bool>) -> Res
 
 #[cfg(test)]
 mod test {
-    use std::fs::{create_dir_all, File};
+    use std::fs::{File, create_dir_all};
     use std::io::prelude::*;
     use tempfile::{Builder, TempDir};
 

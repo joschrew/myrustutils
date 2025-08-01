@@ -1,8 +1,8 @@
 use myrustutils::{print_curl, print_curl_multipart};
-use reqwest::blocking::multipart;
-use reqwest::blocking::Client;
-use reqwest::header::ACCEPT;
 use reqwest::Url;
+use reqwest::blocking::Client;
+use reqwest::blocking::multipart;
+use reqwest::header::ACCEPT;
 
 fn main() {
     let client = Client::new();
