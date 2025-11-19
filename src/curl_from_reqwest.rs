@@ -118,3 +118,35 @@ pub fn to_curl(request: &RequestBuilder) -> Result<String> {
     }
     Ok(res.join(" "))
 }
+
+/// Build URL from multiple parts
+///
+/// With reqwest's join-function a "trailing slash is significant". The slash is added here if
+/// needed, to adapd path's join behaviour:
+/// https://docs.rs/reqwest/latest/reqwest/struct.Url.html#method.join
+/// The reason to use a macro is varargs. This code can panic
+#[macro_export]
+macro_rules! create_url {
+    ( $( $x:expr ),* ) => {{
+        use reqwest::Url;
+        let parts = vec![$($x),*];
+        let mut res = Url::parse(&format!("{}/", parts[0].trim_end_matches('/')))
+            .expect("create_url: Error creating base of url");
+        for (idx, part) in parts.iter().skip(1).enumerate() {
+            let mut prevent_ending_slash = false;
+            if idx == parts.len() - 2 && !part.ends_with('/') {
+                prevent_ending_slash = true
+            }
+            if prevent_ending_slash {
+                res = res
+                        .join(&format!("{}", part.trim_matches('/')))
+                        .expect("create_url: Error joining to url with preventing slash");
+            } else {
+                res = res
+                        .join(&format!("{}/", part.trim_matches('/')))
+                        .expect("create_url: Error joining to url");
+            }
+        }
+        res
+    }};
+}
