@@ -51,7 +51,7 @@ pub fn to_curl_multipart(
 
     let url = format!(
         "{scheme}://{host}{path}{}{query}",
-        if query.is_empty() { "?" } else { "" }
+        if !query.is_empty() { "?" } else { "" }
     );
     res.push(format!("\"{}\"", url));
 
@@ -60,9 +60,26 @@ pub fn to_curl_multipart(
         res.push(format!("\"{}\"", credentials.to_owned()));
     }
 
-    // TODO: extract all headers from debug output instead of setting only this one
+    // add the headers
+    let re_header = Regex::new(r#"headers[:] (\{[^}]+\})"#).unwrap();
+    let header_str = &re_header
+        .captures(str_debug)
+        .expect("header regex findet nix")[1];
+    let header_str = header_str.trim_start_matches('{').trim_end_matches('}');
+    let headers = Regex::new(r#"\", |\": "#)
+        .unwrap()
+        .split(header_str)
+        .map(|x| x.trim_matches('"'))
+        .collect::<Vec<&str>>()
+        .chunks_exact(2)
+        .map(|c| (c[0], c[1]))
+        .collect::<Vec<(&str, &str)>>();
     res.push("-H".to_owned());
     res.push("\"Content-type: multipart/form-data\"".to_owned());
+    for (key, value) in headers {
+        res.push("-H".to_owned());
+        res.push(format!("\"{key}: {value}\""));
+    }
 
     for (key, value) in parts {
         res.push("-F".to_owned());
