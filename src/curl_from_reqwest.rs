@@ -112,18 +112,19 @@ pub fn to_curl(request: &RequestBuilder) -> Result<String> {
     res.push(format!("\"{}\"", request.url().as_str().to_owned()));
 
     for (key, value) in request.headers() {
-        if key == "authorization" {
-            let auth_str_base64 = value.to_str().unwrap();
-            let credentials_base64 = &auth_str_base64[6..];
+        let value_str = value.to_str().unwrap();
+        // Parse Basic Auth password
+        if key == "authorization" && value_str.starts_with("Basic ") {
+            let credentials_base64 = &value_str[6..];
             let decoded_bin = general_purpose::STANDARD
                 .decode(credentials_base64)
-                .unwrap();
+                .expect("Error parsing base64");
             let decoded = std::str::from_utf8(&decoded_bin).unwrap();
             res.push("--user".to_owned());
             res.push(format!("\"{}\"", decoded));
         } else {
             res.push("-H".to_owned());
-            res.push(format!("\"{}: {}\"", key, value.to_str()?));
+            res.push(format!("\"{}: {}\"", key, value_str));
         }
     }
 

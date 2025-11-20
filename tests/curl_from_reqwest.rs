@@ -4,7 +4,7 @@ use {
     reqwest::Url,
     reqwest::blocking::Client,
     reqwest::blocking::multipart::Form,
-    reqwest::header::{CACHE_CONTROL, CONTENT_TYPE, HeaderMap, HeaderValue},
+    reqwest::header::{AUTHORIZATION, CACHE_CONTROL, CONTENT_TYPE, HeaderMap, HeaderValue},
 };
 
 #[cfg(feature = "curl-from-reqwest")]
@@ -14,6 +14,41 @@ fn simple_get_to_curl() {
     let request = Client::new().get(url);
     let result = to_curl(&request).unwrap();
     assert_eq!(result, "curl -X GET \"http://example.com/\"");
+}
+
+#[cfg(feature = "curl-from-reqwest")]
+#[test]
+fn to_curl_with_basic_auth() {
+    let url = Url::parse("http://example.com/").unwrap();
+    let user = "user1";
+    let pass = "dummy";
+    let request = Client::new().get(url).basic_auth(user, Some(pass));
+    let result = to_curl(&request).unwrap();
+    assert_eq!(
+        result,
+        format!(
+            "curl -X GET \"http://example.com/\" --user \"{}:{}\"",
+            user, pass
+        )
+    );
+}
+
+#[cfg(feature = "curl-from-reqwest")]
+#[test]
+fn to_curl_with_bearer_auth_header() {
+    let url = Url::parse("http://example.com/").unwrap();
+    let token = "dummy-token";
+    let request = Client::new()
+        .get(url)
+        .header(AUTHORIZATION, format!("Bearer {}", token));
+    let result = to_curl(&request).unwrap();
+    assert_eq!(
+        result,
+        format!(
+            "curl -X GET \"http://example.com/\" -H \"authorization: Bearer {}\"",
+            token
+        )
+    );
 }
 
 #[cfg(feature = "curl-from-reqwest")]
