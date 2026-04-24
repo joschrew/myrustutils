@@ -35,6 +35,13 @@ fn read_headers(path: &Path) -> Result<Vec<Header>> {
         return Err(anyhow!("File does not exist: {:?}", path));
     }
     let txt = read_to_string(path)?;
+
+    let txt = txt
+        .lines()
+        .filter(|line| line.trim() != "-")
+        .collect::<Vec<_>>()
+        .join("\n");
+
     let html = markdown::to_html(&txt);
     let re = Regex::new(r"<h([1-9])>(.*)</h[1-9]>").unwrap();
     Ok(re
@@ -81,6 +88,10 @@ mod tests {
         let base = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let headers =
             super::read_headers(&base.join("examples/example.md")).expect("error reading headers");
-        assert!(headers.len() > 0, "no headers created");
+        assert_eq!(headers.len(), 5, "expected 5 headers");
+        headers
+            .iter()
+            .find(|x| x.level == 2 && x.text == "not a header")
+            .inspect(|_| assert!(false, "This should not be detected as a header"));
     }
 }
